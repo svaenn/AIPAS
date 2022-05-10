@@ -81,13 +81,13 @@ Function Register-AddressSpace {
                     'RowKey'               = $FreeAddressSpace.RowKey
                     'CreatedDateTime'      = $FreeAddressSpace.CreatedDateTime
                     'Allocated'            = "True"
-                    'VirtualNetworkName'   = $null
+                    'VirtualNetworkName'   = $inputObject.VirtualNetworkName
                     'NetworkAddress'       = $FreeAddressSpace.NetworkAddress
                     'FirstAddress'         = $FreeAddressSpace.FirstAddress
                     'LastAddress'          = $FreeAddressSpace.LastAddress
                     'Hosts'                = $FreeAddressSpace.Hosts
                     'Subscription'         = $null
-                    'ResourceGroup'        = $null
+                    'ResourceGroup'        = $inputObject.ResourceGroup
                     'LastModifiedDateTime' = $(Get-Date -f o)
                 } | ConvertTo-Json
 
