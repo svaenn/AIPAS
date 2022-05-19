@@ -114,15 +114,17 @@ Function Register-AddressSpace {
                     'ClientSecret'       = $ClientSecret
                 }
 
-                Get-AddressSpace @params | Where-Object {$_.RowKey -eq $FreeAddressSpace.RowKey} | Select-Object -ExcludeProperty "odata*"
+                Get-AddressSpace @params | Where-Object { $_.RowKey -eq $FreeAddressSpace.RowKey } | Select-Object -ExcludeProperty "odata*"
             }
             else {
                 Throw
             }
         }
-        # Return already registered Address Space
-        Get-AddressSpace @params | Where-Object { $_.ResourceGroup -eq $($inputObject.ResourceGroup) -and $_.VirtualNetworkName -eq $($inputObject.VirtualNetworkName) } |
+        else {
+            # Return already registered Address Space
+            Get-AddressSpace @params | Where-Object { $_.ResourceGroup -eq $($inputObject.ResourceGroup) -and $_.VirtualNetworkName -eq $($inputObject.VirtualNetworkName) } |
             Select-Object -ExcludeProperty "odata*"
+        }
     }
     catch {
         Throw ('Failed to register free address space')
