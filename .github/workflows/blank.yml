@@ -1,36 +1,39 @@
-# This is a basic workflow to help you get started with Actions
+name: Deploy-Stage
 
-name: CI
-
-# Controls when the workflow will run
+# Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
+  # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches: [ none ]
+  # pull_request:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+  just-a-test:
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - run: |
+          echo "Hello World"
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+  # deploy-storage-account:
+  #   uses: ./.github/workflows/deploy-storageaccount-reusable.yaml
+  #   with:
+  #     RESOURCEGROUPNAME: "rg-aipas-svs3"
+  #     SUBSCRIPTIONID: "8e65589a-9d2b-4d0d-a110-33a515a7f266"
+  #     REGION: "westeurope" 
+  #   secrets:
+  #     AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+  # deploy-azure-function:
+  #   needs: deploy-storage-account
+  #   uses: ./.github/workflows/deploy-azure-function-reusable.yaml
+  #   with:
+  #     AZURE_FUNCTIONAPP_NAME: "svs3-aipas"
+  #     RESOURCEGROUPNAME: ${{needs.deploy-storage-account.outputs.ResourceGroupName}}
+  #     SUBSCRIPTIONID: "8e65589a-9d2b-4d0d-a110-33a515a7f266"
+  #     STORAGEACCOUNTNAME: ${{needs.deploy-storage-account.outputs.StorageAccountName}}
+  #     REGION: "westeurope" 
+  #   secrets:
+  #     AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+  #     APP_SETTINGS: ${{ secrets.APP_SETTINGS }}
