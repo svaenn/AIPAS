@@ -1,4 +1,4 @@
-name: Deploy to all Environments
+name: Deploy-Environment
 
 # Controls when the action will run. 
 on:
