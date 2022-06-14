@@ -7,6 +7,24 @@ env:
 
 # Controls when the action will run. 
 on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+     inputs:
+      AZURE_FUNCTIONAPP_NAME:
+        required: true
+        type: string
+      RESOURCEGROUPNAME:
+        required: true
+        type: string
+      SUBSCRIPTIONID:
+        required: true
+        type: string
+      STORAGEACCOUNTNAME:
+        required: true
+        type: string
+      REGION:
+        required: true
+        type: string
   # Allows you to run this workflow from a starter workflow
   workflow_call:
     inputs:
