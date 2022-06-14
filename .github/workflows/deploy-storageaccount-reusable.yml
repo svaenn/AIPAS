@@ -73,4 +73,6 @@ jobs:
       # Output Storage Account ResourceGroup Name and Storage Account Name
       - run: |
           echo ${{ steps.deploy-storage-account.outputs.ResourceGroupName }}
+          echo "::set-output name=ResourceGroupName::${{ steps.deploy-storage-account.outputs.ResourceGroupName }}"
           echo ${{ steps.deploy-storage-account.outputs.StorageAccountName }}
+          echo "::set-output name=StorageAccountName::${{ steps.deploy-storage-account.outputs.StorageAccountName }}"

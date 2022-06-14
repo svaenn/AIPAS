@@ -56,6 +56,10 @@ jobs:
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - run: |
+          echo "${{ inputs.RESOURCEGROUPNAME }}"
+          echo "${{ inputs.STORAGEACCOUNTNAME }}"
+          echo "${{ inputs.REGION }}"
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       # Build Azure Function. Copies PowerShell IPAM Module to Azure Function
