@@ -36,8 +36,8 @@ jobs:
     runs-on: ubuntu-latest    
     
     outputs:
-      ResourceGroupName: ${{ steps.deploy-storage-account.outputs.ResourceGroupName }}
-      StorageAccountName: ${{ steps.deploy-storage-account.outputs.StorageAccountName }}
+      ResourceGroupName: ${{ steps.output.outputs.ResourceGroupName }}
+      StorageAccountName: ${{ steps.output.outputs.StorageAccountName }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -76,3 +76,4 @@ jobs:
           echo "::set-output name=ResourceGroupName::${{ steps.deploy-storage-account.outputs.ResourceGroupName }}"
           echo ${{ steps.deploy-storage-account.outputs.StorageAccountName }}
           echo "::set-output name=StorageAccountName::${{ steps.deploy-storage-account.outputs.StorageAccountName }}"
+        id: output
