@@ -25,9 +25,9 @@ jobs:
     uses: ./.github/workflows/deploy-azure-function-reuseable.yml
     with:
       AZURE_FUNCTIONAPP_NAME: "svs3-aipas"
-      RESOURCEGROUPNAME: ${{needs.deploy-storage-account.outputs.ResourceGroupName}}
+      RESOURCEGROUPNAME: ${{ needs.deploy-storage-account.outputs.ResourceGroupName }}
       SUBSCRIPTIONID: "8e65589a-9d2b-4d0d-a110-33a515a7f266"
-      STORAGEACCOUNTNAME: ${{needs.deploy-storage-account.outputs.StorageAccountName}}
+      STORAGEACCOUNTNAME: ${{ needs.deploy-storage-account.outputs.StorageAccountName }}
       REGION: "westeurope" 
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
