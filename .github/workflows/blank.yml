@@ -14,7 +14,7 @@ on:
 jobs:
   deploy-storage-account:
     # uses: svaenn/AIPAS/.github/workflows/deploy-storageaccount-reusable.yaml@feature/svs3deployment
-    uses: ./.github/workflows/deploy-storageaccount-reusable.yaml
+    uses: ./.github/workflows/deploy-storageaccount-reusable.yml
     with:
       RESOURCEGROUPNAME: "rg-aipas-svs3"
       SUBSCRIPTIONID: "8e65589a-9d2b-4d0d-a110-33a515a7f266"
@@ -25,7 +25,7 @@ jobs:
   deploy-azure-function:
     needs: deploy-storage-account
     # uses: svaenn/AIPAS/.github/workflows/deploy-azure-function-reusable.yaml@feature/svs3deployment
-    uses: ./.github/workflows/deploy-azure-function-reusable.yaml
+    uses: ./.github/workflows/deploy-azure-function-reusable.yml
     with:
       AZURE_FUNCTIONAPP_NAME: "svs3-aipas"
       RESOURCEGROUPNAME: ${{needs.deploy-storage-account.outputs.ResourceGroupName}}
