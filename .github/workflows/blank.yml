@@ -19,6 +19,12 @@ jobs:
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
 
+  job2:
+    runs-on: ubuntu-latest
+    needs: deploy-storage-account
+    steps:
+      - run: echo ${{ needs.deploy-storage-account.outputs.ResourceGroupName }} ${{ needs.deploy-storage-account.outputs.StorageAccountName }}
+
   deploy-azure-function:
     needs: deploy-storage-account
     # uses: svaenn/AIPAS/.github/workflows/deploy-azure-function-reusable.yaml@feature/svs3deployment
