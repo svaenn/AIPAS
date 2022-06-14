@@ -3,22 +3,51 @@
 name: Deploy-Azure-Function
 
 env:
-  AZURE_FUNCTIONAPP_NAME: "svs3-aipas"    # set this to your application's name
   AZURE_FUNCTIONAPP_PACKAGE_PATH: "./src/function/"  # set this to the path to your web app project, defaults to the repository root
-  RESOURCEGROUPNAME: "rg-aipas-svs3"    # Set this variable for the Resource Group Name where to deploy the Azure Function. This needs to be the same RG as where the Storage Account was being deployed.
-  SUBSCRIPTIONID: "8e65589a-9d2b-4d0d-a110-33a515a7f266"  # Set this variable to deploy the above Resource Group in a certain Subscription
-  STORAGEACCOUNTNAME: "cc3anazlaif5ustorage"
-  REGION: "westeurope" # Set this variable to have the Resource Group and Storage Account deployed in a certain location
 
 # Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ none ]
-  # pull_request:
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+     inputs:
+      AZURE_FUNCTIONAPP_NAME:
+        required: true
+        type: string
+      RESOURCEGROUPNAME:
+        required: true
+        type: string
+      SUBSCRIPTIONID:
+        required: true
+        type: string
+      STORAGEACCOUNTNAME:
+        required: true
+        type: string
+      REGION:
+        required: true
+        type: string
+  # Allows you to run this workflow from a starter workflow
+  workflow_call:
+    inputs:
+      AZURE_FUNCTIONAPP_NAME:
+        required: true
+        type: string
+      RESOURCEGROUPNAME:
+        required: true
+        type: string
+      SUBSCRIPTIONID:
+        required: true
+        type: string
+      STORAGEACCOUNTNAME:
+        required: true
+        type: string
+      REGION:
+        required: true
+        type: string
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
+      APP_SETTINGS:
+        required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -46,19 +75,19 @@ jobs:
         with:
           # Specify the script here
           inlineScript: |
-            az functionapp create --resource-group ${{ env.RESOURCEGROUPNAME }} --consumption-plan-location ${{ env.REGION }} --runtime powershell --functions-version 3 --name $AZURE_FUNCTIONAPP_NAME --storage-account ${{ env.STORAGEACCOUNTNAME }}
+            az functionapp create --resource-group ${{ inputs.RESOURCEGROUPNAME }} --consumption-plan-location ${{ inputs.REGION }} --runtime powershell --functions-version 3 --name ${{ inputs.AZURE_FUNCTIONAPP_NAME }} --storage-account ${{ inputs.STORAGEACCOUNTNAME }}
       # Publish Azure Function${{needs.build-and-deploy-storageaccount.outputs.ResourceGroupName}}
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          app-name: ${{ inputs.AZURE_FUNCTIONAPP_NAME }}
+          package: ${{ inputs.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
       # Configure App Settings
       - name: 'Configure App Settings'
         uses: azure/appservice-settings@v1
         with:
-          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          app-name: ${{ inputs.AZURE_FUNCTIONAPP_NAME }}
           #slot-name: 'staging'  # Optional and needed only if the settings have to be configured on the specific deployment slot
           app-settings-json: '${{ secrets.APP_SETTINGS }}'
         id: settings

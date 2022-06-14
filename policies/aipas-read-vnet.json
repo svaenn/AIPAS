@@ -1,0 +1,84 @@
+{
+  // Policy to automatically provide read access for the aipas app based on https://cloud.solita.fi/en/using-azure-policies-to-audit-and-automate-rbac-role-assignments
+  "properties": {
+    "displayName": "Assign Reader RBAC role for an enterprise application",
+    "policyType": "Custom",
+    "mode": "All",
+    "parameters": {},
+    "policyRule": {
+      "if": {
+        "allOf": [{
+            "field": "type",
+            "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+          },
+          {
+            "anyOf": [{
+                "field": "name",
+                "like": "rg-Shareflex-*-net"
+              },
+              {
+                "field": "name",
+                "like": "rg-shareflex-global"
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "deployIfNotExists",
+        "details": {
+          "type": "Microsoft.Authorization/roleAssignments",
+          "roleDefinitionIds": [
+            "/providers/microsoft.authorization/roleDefinitions/18d7d88d-d35e-4fb5-a5c3-7773c20a72d9",
+            "/subscriptions/229be222-3f54-4a08-8c93-5eee464fdddb/providers/Microsoft.Authorization/roleDefinitions/613d3eae-cf22-4d2d-848d-2694fd2bb238" //id of custom role for role deployment
+          ],
+          "existenceCondition": {
+            "allOf": [{
+                "field": "Microsoft.Authorization/roleAssignments/roleDefinitionId",
+                "like": "/subscriptions/*/providers/Microsoft.Authorization/roleDefinitions/acdd72a7-3385-48ef-bd42-f606fba81ae7" //reader role id in any subscription
+              },
+              {
+                "field": "Microsoft.Authorization/roleAssignments/principalId",
+                "equals": "cea83f8b-ee19-4271-ad9c-2b82b32c1fab" //objectid of enterprise app 
+              }
+            ]
+          },
+          "deployment": {
+            "properties": {
+              "mode": "incremental",
+              "template": {
+                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                "contentVersion": "1.0.0.0",
+                "parameters": {
+                  "adObjectId": {
+                    "type": "string",
+                    "defaultValue": "cea83f8b-ee19-4271-ad9c-2b82b32c1fab", //objectid of enterprise app 
+                    "metadata": {
+                      "description": "ObjectId of an Enterprise Application"
+                    }
+                  },
+                  "contributorRbacRole": {
+                    "type": "string",
+                    "defaultValue": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/acdd72a7-3385-48ef-bd42-f606fba81ae7')]",
+                    "metadata": {
+                      "description": "Reader RBAC role definition ID"
+                    }
+                  }
+                },
+                "resources": [{
+                  "type": "Microsoft.Authorization/roleAssignments",
+                  "apiVersion": "2018-09-01-preview",
+                  "name": "[guid(resourceGroup().id, deployment().name)]",
+                  "properties": {
+                    "roleDefinitionId": "[parameters('contributorRbacRole')]",
+                    "principalId": "[parameters('adObjectId')]"
+                  }
+                }]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

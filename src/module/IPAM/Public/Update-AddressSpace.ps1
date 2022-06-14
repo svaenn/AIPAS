@@ -66,7 +66,7 @@ Function Update-AddressSpace {
         Write-Verbose -Message ('The AIPAS IPAM SPN has access to the following Subscription(s): {0}' -f ($SubscriptionIds | out-string))
 
         $VNets = @()
-        Foreach($SubscriptionId in $SubscriptionIds) {
+        Foreach($VnetSubscriptionId in $SubscriptionIds) {
 
         # Get Vnets using Resource Graph
         $uri = ('https://management.azure.com/providers/Microsoft.ResourceGraph/resources?api-version=2020-04-01-preview')
@@ -77,7 +77,7 @@ Function Update-AddressSpace {
         $Query = "Resources | join kind=leftouter(ResourceContainers | where type=='microsoft.resources/subscriptions' | project subscriptionName=name, subscriptionId) on subscriptionId | where type =~ 'Microsoft.Network/virtualNetworks' | extend addressPrefixes=array_length(properties.addressSpace.addressPrefixes) | extend vNetAddressSpace=properties.addressSpace.addressPrefixes | mvexpand  vNetAddressSpace=properties.addressSpace.addressPrefixes | project subscriptionName, resourceGroup, vNetName=name, vNetLocation=location, addressPrefixes, vNetAddressSpace, properties"
         $Body = @{
             "subscriptions" = @(
-                $SubscriptionId 
+                $VnetSubscriptionId 
             )
             "query"         = $Query
             "options"       = @{
@@ -118,7 +118,7 @@ Function Update-AddressSpace {
         Foreach ($AllocatedAddressSpace in $AllocatedAddressSpaces) {
             Write-Verbose -Message ('Iterating AllAddressSpaces: {0}' -f $AllocatedAddressSpace)
 
-            if ($AllocatedAddressSpaces | Where-Object { $VNets.vNetAddressSpace -contains $_.NetworkAddress }) {
+            if ($AllocatedAddressSpace | Where-Object { $VNets.vNetAddressSpace -contains $_.NetworkAddress }) {
 
                 Write-Verbose -Message ('Updating used address space {0}' -f $($AllocatedAddressSpace.NetworkAddress))
                 $RowKey = $AllocatedAddressSpace.RowKey

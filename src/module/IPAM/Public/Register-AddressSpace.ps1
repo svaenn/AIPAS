@@ -81,13 +81,13 @@ Function Register-AddressSpace {
                     'RowKey'               = $FreeAddressSpace.RowKey
                     'CreatedDateTime'      = $FreeAddressSpace.CreatedDateTime
                     'Allocated'            = "True"
-                    'VirtualNetworkName'   = $null
+                    'VirtualNetworkName'   = $inputObject.VirtualNetworkName
                     'NetworkAddress'       = $FreeAddressSpace.NetworkAddress
                     'FirstAddress'         = $FreeAddressSpace.FirstAddress
                     'LastAddress'          = $FreeAddressSpace.LastAddress
                     'Hosts'                = $FreeAddressSpace.Hosts
                     'Subscription'         = $null
-                    'ResourceGroup'        = $null
+                    'ResourceGroup'        = $inputObject.ResourceGroup
                     'LastModifiedDateTime' = $(Get-Date -f o)
                 } | ConvertTo-Json
 
@@ -114,15 +114,17 @@ Function Register-AddressSpace {
                     'ClientSecret'       = $ClientSecret
                 }
 
-                Get-AddressSpace @params | Where-Object {$_.RowKey -eq $FreeAddressSpace.RowKey} | Select-Object -ExcludeProperty "odata*"
+                Get-AddressSpace @params | Where-Object { $_.RowKey -eq $FreeAddressSpace.RowKey } | Select-Object -ExcludeProperty "odata*"
             }
             else {
                 Throw
             }
         }
-        # Return already registered Address Space
-        Get-AddressSpace @params | Where-Object { $_.ResourceGroup -eq $($inputObject.ResourceGroup) -and $_.VirtualNetworkName -eq $($inputObject.VirtualNetworkName) } |
+        else {
+            # Return already registered Address Space
+            Get-AddressSpace @params | Where-Object { $_.ResourceGroup -eq $($inputObject.ResourceGroup) -and $_.VirtualNetworkName -eq $($inputObject.VirtualNetworkName) } |
             Select-Object -ExcludeProperty "odata*"
+        }
     }
     catch {
         Throw ('Failed to register free address space')

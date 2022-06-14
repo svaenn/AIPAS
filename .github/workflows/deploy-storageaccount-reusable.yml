@@ -10,12 +10,21 @@ env:
 
 # Controls when the action will run. 
 on:
-  # Triggers the workflow
-  push:
-    branches: [ none ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  # Allows you to run this workflow from a starter workflow
+  workflow_call:
+    inputs:
+      RESOURCEGROUPNAME:
+        required: true
+        type: string
+      SUBSCRIPTIONID:
+        required: true
+        type: string
+      REGION:
+        required: true
+        type: string
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -32,9 +41,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - run: |
-          echo "${{ env.RESOURCEGROUPNAME }}"
-          echo "${{ env.SUBSCRIPTIONID }}"
-          echo "${{ env.REGION }}"
+          echo "${{ inputs.RESOURCEGROUPNAME }}"
+          echo "${{ inputs.SUBSCRIPTIONID }}"
+          echo "${{ inputs.REGION }}"
       - uses: actions/checkout@v2
       - uses: azure/login@v1
         with:
@@ -45,16 +54,16 @@ jobs:
         with:
           # Specify the script here
           inlineScript: |
-            az group create --name ${{ env.RESOURCEGROUPNAME }} --location ${{ env.REGION }}
+            az group create --name ${{ inputs.RESOURCEGROUPNAME }} --location ${{ inputs.REGION }}
       # Deploy Storage Account
       - name: Deploy Azure Resource Manager (ARM) Template
         uses: Azure/arm-deploy@v1
         id: deploy-storage-account
         with:
           scope: resourcegroup
-          subscriptionId: ${{ env.SUBSCRIPTIONID }}
-          region: ${{ env.REGION }}
-          resourceGroupName: ${{ env.RESOURCEGROUPNAME }}
+          subscriptionId: ${{ inputs.SUBSCRIPTIONID }}
+          region: ${{ inputs.REGION }}
+          resourceGroupName: ${{ inputs.RESOURCEGROUPNAME }}
           template: src/templates/azuredeploy.json          
           deploymentMode: incremental
           deploymentName: "AIPAS-storageaccount"
