@@ -10,7 +10,7 @@ on:
 
 jobs:
   deploy-stage-svs3:
-    uses: ./.github/workflows/deploy-ipam-reusable.yml
+    uses: ./.github/workflows/deploy-ipam-reuseable.yml
     with:
       RESOURCEGROUPNAME: "rg-aipas-svs3"
       SUBSCRIPTIONID: "8e65589a-9d2b-4d0d-a110-33a515a7f266"
