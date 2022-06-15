@@ -27,6 +27,13 @@ on:
     secrets:
       AZURE_CREDENTIALS:
         required: true
+    outputs:
+      ResourceGroupName:
+        description: "Name of the resource group"
+        value: ${{ jobs.build-and-deploy.outputs.ResourceGroupName }}
+      StorageAccountName:
+        description: "Name of the storage account generated in arm template"
+        value: ${{ jobs.build-and-deploy.outputs.StorageAccountName }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
