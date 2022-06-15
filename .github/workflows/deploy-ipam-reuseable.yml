@@ -1,6 +1,6 @@
 # This workflow deploys a the AIPAS IPAM Azure Function
 
-name: Deploy-Azure-Function
+name: Deploy-Ipam
 
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: "./src/function/"  # set this to the path to your web app project, defaults to the repository root
