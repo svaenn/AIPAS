@@ -1,0 +1,21 @@
+name: Deploy-Ipam-Stages
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ none ]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  deploy-stage-svs3:
+    uses: ./.github/workflows/deploy-ipam-reusable.yml
+    with:
+      RESOURCEGROUPNAME: "rg-aipas-svs3"
+      SUBSCRIPTIONID: "8e65589a-9d2b-4d0d-a110-33a515a7f266"
+      REGION: "westeurope" 
+      AZURE_FUNCTIONAPP_NAME: "svs3-aipas"
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      APP_SETTINGS: ${{ secrets.APP_SETTINGS }}
