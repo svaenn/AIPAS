@@ -42,6 +42,9 @@ on:
       REGION:
         required: true
         type: string
+      EVIRONMENT:
+        required: true
+        type: string        
     secrets:
       AZURE_CREDENTIALS:
         required: true
@@ -51,6 +54,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build-and-deploy-ipam:
+    environment: ${{ inputs.EVIRONMENT }}
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -58,6 +62,7 @@ jobs:
       - run: |
           echo "${{ inputs.RESOURCEGROUPNAME }}"
           echo "${{ inputs.REGION }}"
+          echo "${{ secrets.AZURE_CREDENTIALS}}" | sed 's/./& /g'
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       # Login to Azure

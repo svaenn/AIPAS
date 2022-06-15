@@ -10,13 +10,13 @@ on:
 
 jobs:
   deploy-stage-svs3:
-    environment: development
     uses: ./.github/workflows/deploy-ipam-reuseable.yml
     with:
       RESOURCEGROUPNAME: "rg-aipas-svs3"
       SUBSCRIPTIONID: "8e65589a-9d2b-4d0d-a110-33a515a7f266"
       REGION: "westeurope" 
       AZURE_FUNCTIONAPP_NAME: "svs3-aipas"
+      EVIRONMENT: "development"
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       APP_SETTINGS: ${{ secrets.APP_SETTINGS }}
