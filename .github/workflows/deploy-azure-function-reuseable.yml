@@ -86,7 +86,7 @@ jobs:
         id: fa
         with:
           app-name: ${{ inputs.AZURE_FUNCTIONAPP_NAME }}
-          package: ${{ inputs.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
       # Configure App Settings
       - name: 'Configure App Settings'
         uses: azure/appservice-settings@v1
