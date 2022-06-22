@@ -137,15 +137,7 @@ jobs:
           # Specify the script here
           inlineScript: |
             az functionapp create --resource-group ${{ env.RESOURCEGROUPNAME }} --consumption-plan-location ${{ env.REGION }} --runtime powershell --functions-version 3 --name ${{ env.AZURE_FUNCTIONAPP_NAME }} --storage-account ${{ steps.deploy-storage-account.outputs.StorageAccountName }}
-      # Login to Azure (again)
-      - uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS}}
       # Publish Azure Function${{needs.build-and-deploy-storageaccount.outputs.ResourceGroupName}}
-      - name: 'Run az commands'
-        run: |
-          az account show
-          az functionapp list -otable
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
